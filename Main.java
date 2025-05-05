@@ -1,16 +1,16 @@
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Main {
     static final int MAX_RECORDS = 50;
-    static String[] dates = new String[MAX_RECORDS];
-    static String[] times = new String[MAX_RECORDS];
+    static LocalDateTime[] datesTimes = new LocalDateTime[MAX_RECORDS];
     static char[][] texts = new char[MAX_RECORDS][1000];
     static int recordCount = 0;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
-        System.out.println("Щоденник котика .");
+        System.out.println("Щоденник котика ПЕРЕРОБЛЕНО.");
 
         while (running) {
             System.out.println("\nОберіть дію яку зроблять котики :");
@@ -45,21 +45,72 @@ public class Main {
 
     static void addEntry(Scanner scanner) {
         if (recordCount < MAX_RECORDS) {
-            System.out.print("Введіть дату запису аби котик зрозумів що робити (у форматі РРРР-ММ-ДД): ");
-            String date = scanner.nextLine();
+            int year = 0;
+            int month = 0;
+            int day = 0;
+            int hour = 0;
+            int minute = 0;
+            int second = 0;
+            boolean validInput;
 
-            if (!isValidDate(date)) {
-                System.out.println("Некоректний формат дати. Котик збентежений. Спробуйте ще раз.");
-                return;
-            }
+            do {
+                validInput = true;
+                System.out.print("Введіть рік (РРРР): ");
+                if (scanner.hasNextInt()) {
+                    year = scanner.nextInt();
+                } else {
+                    System.out.println("Некоректний формат введення року. Спробуйте ще раз, вводячи ціле число.");
+                    scanner.next();
+                    validInput = false;
+                }
+                System.out.print("Введіть місяць (ММ): ");
+                if (scanner.hasNextInt()) {
+                    month = scanner.nextInt();
+                } else {
+                    System.out.println("Некоректний формат введення місяця. Спробуйте ще раз, вводячи ціле число.");
+                    scanner.next();
+                    validInput = false;
+                }
+                System.out.print("Введіть день (ДД): ");
+                if (scanner.hasNextInt()) {
+                    day = scanner.nextInt();
+                } else {
+                    System.out.println("Некоректний формат введення дня. Спробуйте ще раз, вводячи ціле число.");
+                    scanner.next();
+                    validInput = false;
+                }
+                System.out.print("Введіть годину (гг): ");
+                if (scanner.hasNextInt()) {
+                    hour = scanner.nextInt();
+                } else {
+                    System.out.println("Некоректний формат введення години. Спробуйте ще раз, вводячи ціле число.");
+                    scanner.next();
+                    validInput = false;
+                }
+                System.out.print("Введіть хвилини (хх): ");
+                if (scanner.hasNextInt()) {
+                    minute = scanner.nextInt();
+                } else {
+                    System.out.println("Некоректний формат введення хвилин. Спробуйте ще раз, вводячи ціле число.");
+                    scanner.next();
+                    validInput = false;
+                }
+                System.out.print("Введіть секунди (сс): ");
+                if (scanner.hasNextInt()) {
+                    second = scanner.nextInt();
+                } else {
+                    System.out.println("Некоректний формат введення секунд. Спробуйте ще раз, вводячи ціле число.");
+                    scanner.next();
+                    validInput = false;
+                }
+                scanner.nextLine();
+                if (validInput && (year < 1900 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59)) {
+                    System.out.println("Введені значення дати або часу є некоректними. Будь ласка, перевірте їх.");
+                    validInput = false;
+                }
+            } while (!validInput);
 
-            System.out.print("Введіть час запису (у форматі HH:MM:SS): ");
-            String time = scanner.nextLine();
-
-            if (!isValidTime(time)) {
-                System.out.println("Некоректний формат часу. Котик розгубився. Спробуйте ще раз.");
-                return;
-            }
+            LocalDateTime dateTime = LocalDateTime.of(year, month, day, hour, minute, second);
 
             System.out.println("Введіть текст запису аби котик записав ващі думки (для завершення натисніть Enter на порожньому рядку):");
             String line;
@@ -81,8 +132,7 @@ public class Main {
             }
             texts[recordCount][charIndex] = '\0';
 
-            dates[recordCount] = date;
-            times[recordCount] = time;
+            datesTimes[recordCount] = dateTime;
             recordCount++;
             System.out.println("Запис успішно додано. Це як залишити теплий слід лапки в пам’яті.");
         } else {
@@ -91,19 +141,80 @@ public class Main {
     }
 
     static void deleteEntry(Scanner scanner) {
-        System.out.print("Введіть дату запису, аби котив знав що потрібно видалити: ");
-        String dateToDelete = scanner.nextLine();
-        System.out.print("Введіть час запису, аби котив знав що потрібно видалити: ");
-        String timeToDelete = scanner.nextLine();
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+        boolean validInput;
+
+        do {
+            validInput = true;
+            System.out.print("Введіть рік запису для видалення (РРРР): ");
+            if (scanner.hasNextInt()) {
+                year = scanner.nextInt();
+            } else {
+                System.out.println("Некоректний формат введення року. Спробуйте ще раз, вводячи ціле число.");
+                scanner.next();
+                validInput = false;
+            }
+            System.out.print("Введіть місяць (ММ): ");
+            if (scanner.hasNextInt()) {
+                month = scanner.nextInt();
+            } else {
+                System.out.println("Некоректний формат введення місяця. Спробуйте ще раз, вводячи ціле число.");
+                scanner.next();
+                validInput = false;
+            }
+            System.out.print("Введіть день (ДД): ");
+            if (scanner.hasNextInt()) {
+                day = scanner.nextInt();
+            } else {
+                System.out.println("Некоректний формат введення дня. Спробуйте ще раз, вводячи ціле число.");
+                scanner.next();
+                validInput = false;
+            }
+            System.out.print("Введіть годину (гг): ");
+            if (scanner.hasNextInt()) {
+                hour = scanner.nextInt();
+            } else {
+                System.out.println("Некоректний формат введення години. Спробуйте ще раз, вводячи ціле число.");
+                scanner.next();
+                validInput = false;
+            }
+            System.out.print("Введіть хвилини (хх): ");
+            if (scanner.hasNextInt()) {
+                minute = scanner.nextInt();
+            } else {
+                System.out.println("Некоректний формат введення хвилин. Спробуйте ще раз, вводячи ціле число.");
+                scanner.next();
+                validInput = false;
+            }
+            System.out.print("Введіть секунди (сс): ");
+            if (scanner.hasNextInt()) {
+                second = scanner.nextInt();
+            } else {
+                System.out.println("Некоректний формат введення секунд. Спробуйте ще раз, вводячи ціле число.");
+                scanner.next();
+                validInput = false;
+            }
+            scanner.nextLine();
+            if (validInput && (year < 1900 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59)) {
+                System.out.println("Введені значення дати або часу є некоректними. Будь ласка, перевірте їх.");
+                validInput = false;
+            }
+        } while (!validInput);
+
+        LocalDateTime dateTimeToDelete = LocalDateTime.of(year, month, day, hour, minute, second);
+
         for (int i = 0; i < recordCount; i++) {
-            if (dateToDelete.equals(dates[i]) && timeToDelete.equals(times[i])) {
+            if (dateTimeToDelete.equals(datesTimes[i])) {
                 for (int j = i; j < recordCount - 1; j++) {
-                    dates[j] = dates[j + 1];
-                    times[j] = times[j + 1];
+                    datesTimes[j] = datesTimes[j + 1];
                     System.arraycopy(texts[j + 1], 0, texts[j], 0, texts[j + 1].length);
                 }
-                dates[recordCount - 1] = null;
-                times[recordCount - 1] = null;
+                datesTimes[recordCount - 1] = null;
                 texts[recordCount - 1] = new char[1000];
                 recordCount--;
                 System.out.println("Запис видалено. Іноді потрібно залишити місце для нових муркотінь.");
@@ -119,8 +230,8 @@ public class Main {
         System.out.println("Ваші записи:");
 
         for (int i = 0; i < recordCount; i++) {
-            if (dates[i] != null) {
-                System.out.println("Дата: " + dates[i] + " Час: " + times[i]);
+            if (datesTimes[i] != null) {
+                System.out.println("Дата та час: " + datesTimes[i]);
                 System.out.println(new String(texts[i]).trim());
                 empty = false;
             }
@@ -129,27 +240,5 @@ public class Main {
         if (empty) {
             System.out.println("Записів поки що немає. Але котики вірять у вас.");
         }
-    }
-
-    static boolean isValidDate(String date) {
-        if (date.length() != 10) return false;
-        if (date.charAt(4) != '-' || date.charAt(7) != '-') return false;
-
-        for (int i = 0; i < date.length(); i++) {
-            if (i == 4 || i == 7) continue;
-            if (date.charAt(i) < '0' || date.charAt(i) > '9') return false;
-        }
-        return true;
-    }
-
-    static boolean isValidTime(String time) {
-        if (time.length() != 8) return false;
-        if (time.charAt(2) != ':' || time.charAt(5) != ':') return false;
-
-        for (int i = 0; i < time.length(); i++) {
-            if (i == 2 || i == 5) continue;
-            if (time.charAt(i) < '0' || time.charAt(i) > '9') return false;
-        }
-        return true;
     }
 }
